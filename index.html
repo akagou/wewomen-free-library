@@ -65,6 +65,8 @@
   .btn--primary:hover{transform:translateY(-2px);box-shadow:0 8px 26px rgba(46,86,80,.28)}
   .btn--coral{background:var(--rose);color:#fff;padding:11px 20px;font-size:.85rem}
   .btn--coral:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(176,70,70,.26)}
+  .btn--acc{background:var(--acc,var(--green));color:#fff;padding:11px 20px;font-size:.85rem}
+  .btn--acc:hover{transform:translateY(-2px);box-shadow:0 10px 26px rgba(35,71,64,.22)}
   .btn--ghost{background:transparent;color:var(--green);padding:11px 18px;font-size:.85rem;border:1.5px solid var(--line)}
   .btn--ghost:hover{border-color:var(--green);background:rgba(46,86,80,.04)}
   .btn--sm{padding:10px 18px;font-size:.82rem}
@@ -88,7 +90,7 @@
   .kicker-meta{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.09em;color:var(--ink-acc,var(--ink))}
   .kicker-meta .bar{color:var(--line);margin:0 7px;font-weight:400}
   .spot__title{font-family:var(--serif);font-weight:500;font-size:clamp(1.5rem,3.2vw,2.05rem);line-height:1.16;color:var(--green);letter-spacing:-.01em;margin:0 0 10px}
-  .spot__line{font-size:1.02rem;line-height:1.6;color:var(--body);max-width:54ch;margin-bottom:10px}
+  .spot__line{font-size:1.02rem;line-height:1.6;color:var(--body);max-width:54ch;margin-bottom:22px}
   .spot__value{display:flex;gap:9px;align-items:flex-start;font-size:.95rem;line-height:1.5;color:var(--ink-acc,var(--ink));font-weight:600;max-width:52ch;margin-bottom:20px}
   .spot__value svg{flex:none;margin-top:3px;color:var(--acc)}
   .spot__actions{display:flex;flex-wrap:wrap;gap:14px;align-items:center}
@@ -241,52 +243,40 @@
   const RESOURCES = [
     { id:'f1', topic:'hormone', type:'Guide', status:'ready',
       title:'Your Body After 35, Explained',
-      line:'A plain-English map of what is shifting across your hormones, energy, sleep and training, and how it all connects.',
-      value:'Understand what is happening, so nothing feels random or "just you" anymore.' },
+      line:'A plain-English map of what is shifting after 35, so nothing feels random or "just you" anymore.' },
     { id:'h1', topic:'hormone', type:'Tracker', status:'ready',
       title:'Perimenopause Symptom Tracker',
-      line:'A simple daily log for the symptoms that come and go across a cycle.',
-      value:'Spot your patterns, and bring your GP evidence instead of guesses.' },
+      line:'Log the symptoms that come and go, and spot the patterns worth bringing to your GP.' },
     { id:'h2', topic:'hormone', type:'Checklist', status:'ready',
       title:'Questions to Ask Your GP',
-      line:'The questions that actually get you answers on perimenopause and HRT.',
-      value:'Leave the appointment with a plan, not a list of things you forgot to ask.' },
+      line:'The questions that get real answers on perimenopause and HRT, so you leave with a plan.' },
     { id:'h3', topic:'hormone', type:'Guide', status:'soon',
       title:'Understanding HRT',
-      line:'A balanced, jargon-free look at the options and the real trade-offs.',
-      value:'Decide from facts, not fear or headlines.' },
+      line:'A balanced, jargon-free look at the options, so you can decide from facts, not fear.' },
     { id:'n1', topic:'nutrition', type:'Guide', status:'ready',
       title:'Protein for Women 35+',
-      line:'Why protein matters more now, how much you actually need, and easy ways to get there.',
-      value:'Hold on to muscle, energy and strength as your body changes.' },
+      line:'Why protein matters more now and how to get enough, to hold on to muscle and energy.' },
     { id:'n2', topic:'nutrition', type:'Checklist', status:'ready',
       title:'The Balanced Plate',
-      line:'A fridge-door checklist for building a meal that keeps you full and steady.',
-      value:'Eat well with ten seconds of thought, not an hour of planning.' },
+      line:'A fridge-door checklist for a meal that keeps you full and steady, in seconds of thought.' },
     { id:'n3', topic:'nutrition', type:'Guide', status:'soon',
       title:'Five High-Protein Breakfasts',
-      line:'Five real-food breakfasts that hit your protein target before the day starts.',
-      value:'No more mid-morning crash.' },
+      line:'Five real-food breakfasts that hit your protein target, with no mid-morning crash.' },
     { id:'m1', topic:'movement', type:'Guide', status:'ready',
       title:'Strength Training Starter',
-      line:'Why strength beats endless cardio now, with a simple first-month plan.',
-      value:'Get stronger and steadier without living in the gym.' },
+      line:'Why strength beats endless cardio now, with a simple first-month plan to get going.' },
     { id:'m2', topic:'movement', type:'Tracker', status:'ready',
       title:'Pelvic Floor Daily Tracker',
-      line:'A two-week tracker for the five-minute routine no one ever taught you.',
-      value:'Build the quiet habit that protects you for decades.' },
+      line:'A two-week tracker for the five-minute routine no one taught you, but everyone needs.' },
     { id:'s1', topic:'stress', type:'Guide', status:'ready',
       title:'The Wind-Down Routine',
-      line:'A short evening sequence that tells a changing body it is safe to sleep.',
-      value:'Fall asleep faster, and wake up fewer times in the night.' },
+      line:'A short evening sequence that helps a changing body fall asleep faster and wake less.' },
     { id:'s2', topic:'stress', type:'Guide', status:'ready',
       title:'The Two-Minute Reset',
-      line:'One breathing technique to calm your system on a hard day.',
-      value:'A reset for your desk, the car, or the school run.' },
+      line:'One breathing technique to calm your system, for your desk, the car, or the school run.' },
     { id:'s3', topic:'stress', type:'Checklist', status:'soon',
       title:'Stress Signals Checklist',
-      line:'The early signs of overload most women push through and ignore.',
-      value:'Catch burnout before it catches you.' },
+      line:'The early signs of overload most women push through, so you catch burnout early.' },
   ];
 
   const KEY = 'wewomen_library';
@@ -305,8 +295,8 @@
       if (state.unlocked || state.notified.includes(item.id)) return `<span class="soonlabel">✓ On the list</span>`;
       return `<button class="btn btn--ghost btn--sm" data-notify="${item.id}">Notify me</button>`;
     }
-    if (state.unlocked) return `<button class="btn btn--primary btn--sm" data-download="${item.id}">Download ↓</button>`;
-    return `<button class="btn btn--coral" data-get="${item.id}">Get it →</button>`;
+    if (state.unlocked) return `<button class="btn btn--acc" data-download="${item.id}">Download ↓</button>`;
+    return `<button class="btn btn--acc" data-get="${item.id}">Get it →</button>`;
   }
   function refreshActions(){
     document.querySelectorAll('[data-action-for]').forEach((slot)=>{
@@ -330,7 +320,6 @@
         </div>
         <h2 class="spot__title">${item.title}</h2>
         <p class="spot__line">${item.line}</p>
-        <p class="spot__value">${CHECK}<span>${item.value}</span></p>
         <div class="spot__actions"><span data-action-for="${item.id}"></span></div>
       </div>`;
     el('spotlight').style.setProperty('--acc', t.acc);
@@ -347,7 +336,6 @@
           <div class="item__kicker">${item.type}<span class="bar">|</span>${t.label}${soon ? '<span class="bar">|</span><span class="soon">Coming soon</span>' : ''}</div>
           <h3 class="item__title">${item.title}</h3>
           <p class="item__line">${item.line}</p>
-          <p class="item__value">${CHECK}<span>${item.value}</span></p>
         </div>
         <div class="item__action" data-action-for="${item.id}"></div>
       </article>`;
