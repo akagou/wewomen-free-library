@@ -226,6 +226,29 @@
   .chip .chip__n { opacity: 0.6; font-weight: 600; margin-left: 4px; }
   .chip.active .chip__n { opacity: 0.7; }
 
+  /* ─── Category jump-nav + grouped sections ─── */
+  .catnav .chip { text-decoration: none; display: inline-flex; align-items: center; }
+  .category { scroll-margin-top: 124px; margin-bottom: clamp(34px, 5vw, 52px); }
+  .category:last-child { margin-bottom: 0; }
+  .category__head { display: flex; align-items: center; gap: 12px; margin: 4px 0 18px; }
+  .category__dot { width: 11px; height: 11px; border-radius: 50%; background: var(--t-deep); flex: none; box-shadow: 0 0 0 4px color-mix(in oklab, var(--t-deep) 14%, transparent); }
+  .category__title { font-family: var(--serif); font-weight: 500; font-size: 1.42rem; color: var(--green); letter-spacing: -0.01em; }
+  .category__count { font-size: 0.78rem; color: var(--meta); }
+  .category__more {
+    display: flex; align-items: center; justify-content: space-between; gap: 14px;
+    width: 100%; text-align: left; background: transparent;
+    border: 1.5px dashed var(--line); border-radius: var(--r-card);
+    padding: 15px 20px; color: var(--body); font-family: var(--sans); font-size: 0.9rem;
+    transition: border-color .22s var(--ease), background .22s var(--ease), transform .22s var(--ease);
+  }
+  .category__more:hover { border-color: var(--t-deep); background: var(--surface); transform: translateY(-2px); }
+  .category__morecta { color: var(--t-ink); font-weight: 600; font-size: 0.85rem; white-space: nowrap; }
+  .category__empty {
+    border: 1.5px dashed var(--line); border-radius: var(--r-card);
+    padding: 20px 22px; color: var(--body); font-size: 0.92rem; line-height: 1.55;
+    background: rgba(243,237,226,0.4);
+  }
+
   /* ═══════════════ RESOURCE LIST ═══════════════ */
   .list { display: flex; flex-direction: column; gap: 12px; padding-bottom: 8px; }
   .resource {
@@ -414,26 +437,16 @@
 </header>
 
 <main>
-  <!-- ─── FEATURED ─── -->
-  <section class="wrap featured" aria-label="Start here">
-    <div class="featured__card reveal" id="featuredCard"></div>
-  </section>
-
-  <!-- ─── LIBRARY ─── -->
+  <!-- ─── LIBRARY (grouped by topic) ─── -->
   <section class="wrap" aria-label="Resource library">
     <div class="libhead">
-      <h3>Browse the library</h3>
+      <h3>Browse by topic</h3>
       <span class="libhead__count" id="libCount"></span>
     </div>
 
-    <div class="filterbar" id="filterbar" role="tablist" aria-label="Filter by topic"></div>
+    <nav class="filterbar catnav" id="catnav" aria-label="Jump to a topic"></nav>
 
-    <div class="list" id="list"></div>
-
-    <div class="empty" id="empty">
-      <p class="empty__title">Nothing here just yet</p>
-      <p id="emptyMsg">More resources for this topic are on the way — unlock the library and we'll send them over as they land.</p>
-    </div>
+    <div id="categories"></div>
   </section>
 
   <!-- ─── CLOSING ─── -->
@@ -499,14 +512,12 @@
     `<svg class="${cls||''}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">${ICONS[type]||ICONS.Guide}</svg>`;
 
   /* ─── Content (realistic placeholders — swap for the real ones) ─── */
-  const FEATURED = {
-    id: 'f1', topic: 'hormone', type: 'Guide', status: 'ready',
-    title: 'Your Body After 35, Explained',
-    desc: 'The plain-English overview of what’s actually changing — hormones, energy, sleep and training — and how it all fits together. If you only read one thing, start here.',
-    inside: ['What perimenopause really is (and isn’t)', 'The four systems that shift after 35', 'What’s normal vs. worth checking', 'Where to start, this week'],
-    fmt: 'PDF · 12 pages',
-  };
   const RESOURCES = [
+    { id: 'f1', topic: 'hormone', type: 'Guide', status: 'ready',
+      title: 'Your Body After 35, Explained',
+      desc: 'The plain-English overview of what’s actually changing — hormones, energy, sleep and training — and how it all fits together. If you only read one thing, start here.',
+      inside: ['What perimenopause really is (and isn’t)', 'The four systems that shift after 35', 'What’s normal vs. worth checking', 'Where to start, this week'],
+      fmt: 'PDF · 12 pages' },
     { id: 'h1', topic: 'hormone', type: 'Tracker', status: 'ready',
       title: 'Perimenopause Symptom Tracker',
       desc: 'Log how you feel across a full cycle so patterns — and conversations with your GP — get a lot easier.',
@@ -577,42 +588,15 @@
     </div>`;
   }
 
-  /* ─── Featured card ─── */
-  function renderFeatured() {
-    const t = TOPICS[FEATURED.topic];
-    el('featuredCard').innerHTML = `
-      ${coverHTML(FEATURED)}
-      <div class="featured__body" style="--t-tint:${t.tint};--t-ink:${t.ink}">
-        <div class="tagrow">
-          <span class="pill pill--start">★ Start here</span>
-          <span class="pill pill--type">${iconSvg(FEATURED.type,'')} ${FEATURED.type}</span>
-        </div>
-        <h2>${FEATURED.title}</h2>
-        <p class="featured__desc">${FEATURED.desc}</p>
-        <div class="featured__actions">
-          <button class="btn btn--ghost" data-preview="${FEATURED.id}">Preview</button>
-          <span data-action-for="${FEATURED.id}"></span>
-          <span class="featured__meta">${FEATURED.fmt}</span>
-        </div>
-      </div>`;
-    el('featuredCard').querySelector('.cover').style.cssText += 'width:168px;height:224px;padding:14px 13px;';
-    const ttl = el('featuredCard').querySelector('.cover__title');
-    if (ttl) ttl.style.cssText = 'font-family:var(--serif);font-size:0.92rem;line-height:1.16;font-weight:500;';
-    const typ = el('featuredCard').querySelector('.cover__type');
-    if (typ) typ.style.fontSize = '0.6rem';
-  }
-
-  /* ─── Resource rows ─── */
-  function renderList() {
-    const html = RESOURCES.map((item) => {
-      const t = TOPICS[item.topic];
-      const soon = item.status === 'soon';
-      return `<div class="resource reveal" data-topic="${item.topic}" data-status="${item.status}" style="--t-tint:${t.tint};--t-ink:${t.ink}">
-        <div class="cover-slot" data-cover="${item.id}">${coverHTML(item)}</div>
+  /* ─── Resource row ─── */
+  function rowHTML(item) {
+    const t = TOPICS[item.topic];
+    const soon = item.status === 'soon';
+    return `<div class="resource reveal" data-topic="${item.topic}" data-status="${item.status}" style="--t-tint:${t.tint};--t-ink:${t.ink}">
+        <div class="cover-slot" data-preview="${item.id}">${coverHTML(item)}</div>
         <button class="resource__info" data-preview="${item.id}" aria-label="Preview ${item.title}">
           <span class="tagrow" style="margin-bottom:0">
             <span class="pill pill--type">${iconSvg(item.type,'')} ${item.type}</span>
-            <span class="pill" style="background:${t.tint};color:${t.ink};text-transform:none;letter-spacing:0;font-weight:600">${t.label}</span>
             ${soon ? '<span class="pill pill--soon">Coming soon</span>' : ''}
           </span>
           <span class="resource__title">${item.title}</span>
@@ -623,8 +607,35 @@
           <span data-action-for="${item.id}"></span>
         </div>
       </div>`;
+  }
+
+  /* ─── Categories (4 topics; resources grouped under each) ─── */
+  function renderCategories() {
+    const cats = Object.keys(TOPICS).map((key) => ({ key, t: TOPICS[key], items: RESOURCES.filter((r) => r.topic === key) }));
+
+    el('catnav').innerHTML = cats.map((c) =>
+      `<a class="chip" href="#cat-${c.key}" data-cat="${c.key}">${c.t.label}<span class="chip__n">${c.items.length}</span></a>`).join('');
+
+    el('categories').innerHTML = cats.map((c) => {
+      const t = c.t;
+      const rows = c.items.map(rowHTML).join('');
+      const tail = c.items.length
+        ? `<button class="category__more" data-notify-cat="${c.key}" style="--t-deep:${t.deep};--t-ink:${t.ink}">
+             <span class="category__moretext">＋  More ${t.label.toLowerCase()} resources coming soon</span>
+             <span class="category__morecta">Get notified →</span>
+           </button>`
+        : `<div class="category__empty">The first ${t.label.toLowerCase()} resources are on the way — unlock the library and we’ll email you the moment they land.</div>`;
+      return `<section class="category" id="cat-${c.key}" style="--t-deep:${t.deep}">
+          <header class="category__head reveal">
+            <span class="category__dot"></span>
+            <h4 class="category__title">${t.label}</h4>
+            <span class="category__count">${c.items.length ? c.items.length + (c.items.length === 1 ? ' resource' : ' resources') : 'Coming soon'}</span>
+          </header>
+          <div class="list">${rows}${tail}</div>
+        </section>`;
     }).join('');
-    el('list').innerHTML = html;
+
+    el('libCount').textContent = `${RESOURCES.length} free resources across 4 topics · more added monthly`;
   }
 
   /* ─── Per-item action button (state-aware) ─── */
@@ -639,7 +650,7 @@
     return `<button class="btn btn--coral" data-get="${item.id}">Get it →</button>`;
   }
   function refreshActions() {
-    const all = [FEATURED, ...RESOURCES];
+    const all = RESOURCES;
     document.querySelectorAll('[data-action-for]').forEach((slot) => {
       const item = all.find((r) => r.id === slot.getAttribute('data-action-for'));
       if (item) slot.innerHTML = actionHTML(item);
@@ -655,39 +666,26 @@
     if (!opts || !opts.silent) toast('Library unlocked — everything’s yours');
   }
 
-  /* ─── Filter ─── */
-  function renderChips() {
-    const counts = { all: RESOURCES.length };
-    Object.keys(TOPICS).forEach((k) => counts[k] = RESOURCES.filter((r) => r.topic === k).length);
-    const chip = (key, label) =>
-      `<button class="chip${key === 'all' ? ' active' : ''}" role="tab" data-filter="${key}" aria-selected="${key==='all'}">${label}<span class="chip__n">${counts[key]}</span></button>`;
-    el('filterbar').innerHTML =
-      chip('all', 'All') + Object.entries(TOPICS).map(([k, v]) => chip(k, v.label)).join('');
-    el('libCount').textContent = `${RESOURCES.length} resources · more added monthly`;
-  }
-  function applyFilter(key) {
-    let shown = 0;
-    document.querySelectorAll('.resource').forEach((row) => {
-      const match = key === 'all' || row.getAttribute('data-topic') === key;
-      row.style.display = match ? '' : 'none';
-      if (match) shown++;
-    });
-    el('empty').classList.toggle('show', shown === 0);
-    if (shown === 0) {
-      const label = key === 'all' ? 'this' : TOPICS[key].label.toLowerCase();
-      el('emptyMsg').textContent = `More ${label} resources are on the way — unlock the library and we’ll send them over as they land.`;
-    }
-    document.querySelectorAll('.chip').forEach((c) => {
-      const active = c.getAttribute('data-filter') === key;
-      c.classList.toggle('active', active); c.setAttribute('aria-selected', active);
-    });
+  /* ─── Category jump-nav scroll-spy ─── */
+  function setupScrollSpy() {
+    const links = Array.prototype.slice.call(document.querySelectorAll('.catnav .chip'));
+    if (!links.length) return;
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((en) => {
+        if (en.isIntersecting) {
+          const key = en.target.id.replace('cat-', '');
+          links.forEach((l) => l.classList.toggle('active', l.getAttribute('data-cat') === key));
+        }
+      });
+    }, { rootMargin: '-45% 0px -50% 0px', threshold: 0 });
+    document.querySelectorAll('.category').forEach((s) => io.observe(s));
   }
 
   /* ─── Modal ─── */
   const modal = el('modal');
   let lastFocus = null;
   function openPreview(id) {
-    const item = [FEATURED, ...RESOURCES].find((r) => r.id === id);
+    const item = RESOURCES.find((r) => r.id === id);
     if (!item) return;
     const t = TOPICS[item.topic];
     lastFocus = document.activeElement;
@@ -729,7 +727,7 @@
   modal.addEventListener('cancel', (e) => { e.preventDefault(); closeModal(); });
 
   function download(id) {
-    const item = [FEATURED, ...RESOURCES].find((r) => r.id === id);
+    const item = RESOURCES.find((r) => r.id === id);
     toast(`Downloading “${item ? item.title : 'resource'}”…`);
   }
 
@@ -756,8 +754,15 @@
       toast('Add your email and we’ll let you know →');
       return;
     }
-    const chip = e.target.closest('[data-filter]');
-    if (chip) { applyFilter(chip.getAttribute('data-filter')); return; }
+    const ncat = e.target.closest('[data-notify-cat]');
+    if (ncat) {
+      if (state.unlocked) { toast('You’re on the list — we’ll email you as new ones land'); return; }
+      const focusBar = el('heroEmail');
+      window.scrollTo({ top: 0, behavior: reduce ? 'auto' : 'smooth' });
+      setTimeout(() => focusBar && focusBar.focus(), reduce ? 0 : 400);
+      toast('Add your email and we’ll let you know →');
+      return;
+    }
   });
 
   document.addEventListener('submit', (e) => {
@@ -777,7 +782,7 @@
       const input = form.querySelector('input'); const v = input.value;
       if (!validEmail(v)) { input.focus(); toast('That email looks off — mind checking it?'); return; }
       unlock(v, { silent: true });
-      const item = [FEATURED, ...RESOURCES].find((r) => r.id === gf);
+      const item = RESOURCES.find((r) => r.id === gf);
       el('modalAction').innerHTML = modalActionHTML(item);
       el('modalFmt').textContent = item.fmt + '  ·  free download';
       toast('Unlocked — tap download whenever you’re ready');
@@ -791,7 +796,7 @@
       if (!validEmail(v)) { input.focus(); toast('That email looks off — mind checking it?'); return; }
       if (!state.notified.includes(sf)) state.notified.push(sf);
       unlock(v, { silent: true });
-      const item = [FEATURED, ...RESOURCES].find((r) => r.id === sf);
+      const item = RESOURCES.find((r) => r.id === sf);
       el('modalAction').innerHTML = modalActionHTML(item);
       toast('You’re on the list — and the rest is unlocked');
       return;
@@ -816,12 +821,10 @@
   }
 
   /* ─── Boot ─── */
-  renderFeatured();
-  renderList();
-  renderChips();
+  renderCategories();
   refreshActions();
-  applyFilter('all');
   initReveal();
+  setupScrollSpy();
 })();
 </script>
 </body>
