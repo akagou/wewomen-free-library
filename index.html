@@ -10,74 +10,96 @@
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=Fraunces:opsz,wght@9..144,400;9..144,500&display=swap" rel="stylesheet">
 <style>
   :root{
-    --green:#2E5650; --green-deep:#234740; --coral:#E07A5F; --rose:#b04646;
-    --cream:#faf8f4; --warm:#f3ede2; --surface:#fff; --ink:#2c3531; --body:#4d5b5e; --meta:#6c787b;
+    --green:#2E5650; --coral:#E07A5F; --rose:#b04646; --sage:#85a49a;
+    --cream:#faf8f4; --surface:#fff; --ink:#2c3531; --body:#4d5b5e; --meta:#6c787b;
     --line:rgba(46,86,80,.12); --ease:cubic-bezier(.22,1,.36,1);
   }
   *{margin:0;padding:0;box-sizing:border-box}
   body{
     background:var(--cream); color:var(--ink); font-family:'DM Sans',system-ui,sans-serif;
     min-height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center;
-    padding:48px 24px; line-height:1.6; -webkit-font-smoothing:antialiased;
+    padding:52px 24px; line-height:1.6; -webkit-font-smoothing:antialiased;
     background-image:radial-gradient(circle at 50% -10%, rgba(133,164,154,.12), transparent 60%);
   }
-  .wrap{max-width:880px; width:100%; text-align:center}
+  .wrap{max-width:1040px; width:100%; text-align:center}
   .kicker{font-size:.72rem; text-transform:uppercase; letter-spacing:.18em; font-weight:600; color:var(--coral)}
-  h1{
-    font-family:'Fraunces',Georgia,serif; font-weight:500; letter-spacing:-.02em;
-    font-size:clamp(2rem,5vw,3rem); color:var(--green); margin:14px 0 12px; line-height:1.1;
-  }
-  .lede{font-size:clamp(1rem,2.2vw,1.1rem); color:var(--body); max-width:520px; margin:0 auto 44px}
-  .grid{display:grid; grid-template-columns:repeat(2,1fr); gap:22px; text-align:left}
+  h1{font-family:'Fraunces',Georgia,serif; font-weight:500; letter-spacing:-.02em;
+     font-size:clamp(2rem,5vw,3rem); color:var(--green); margin:14px 0 12px; line-height:1.1}
+  .lede{font-size:clamp(1rem,2.2vw,1.1rem); color:var(--body); max-width:540px; margin:0 auto 44px}
+  .grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(230px,1fr)); gap:20px; text-align:left}
   .card{
-    background:var(--surface); border:1px solid var(--line); border-radius:22px; padding:30px 28px;
+    background:var(--surface); border:1px solid var(--line); border-radius:20px; padding:26px 24px;
     text-decoration:none; color:inherit; display:flex; flex-direction:column; gap:14px;
     box-shadow:0 12px 40px rgba(35,71,64,.06);
     transition:transform .3s var(--ease), box-shadow .3s var(--ease), border-color .3s;
   }
   .card:hover{transform:translateY(-5px); box-shadow:0 22px 60px rgba(35,71,64,.14); border-color:rgba(46,86,80,.25)}
-  .tag{align-self:flex-start; font-size:.68rem; font-weight:700; text-transform:uppercase; letter-spacing:.08em;
-       padding:5px 12px; border-radius:100px; background:rgba(46,86,80,.10); color:var(--green)}
-  .card--b .tag{background:rgba(224,122,95,.14); color:var(--rose)}
-  .glyph{display:flex; gap:5px; height:48px; align-items:flex-end; margin-top:2px}
-  .glyph i{display:block; border-radius:4px; background:var(--green); opacity:.85}
-  .card--a .glyph i{width:26%; height:100%}
-  .card--b .glyph{flex-direction:column; gap:6px; height:48px; justify-content:center}
-  .card--b .glyph i{width:100%; height:9px; background:var(--coral); opacity:.8}
-  .card--b .glyph i:first-child{width:60%}
-  h2{font-family:'Fraunces',Georgia,serif; font-weight:500; font-size:1.4rem; color:var(--green); letter-spacing:-.01em}
-  .card p{font-size:.92rem; color:var(--body)}
-  .go{margin-top:auto; font-weight:600; font-size:.92rem; color:var(--green); display:inline-flex; align-items:center; gap:7px}
-  .card--b .go{color:var(--rose)}
-  .foot{margin-top:40px; font-size:.82rem; color:var(--meta)}
-  @media (max-width:620px){ .grid{grid-template-columns:1fr} }
+  .tag{align-self:flex-start; font-size:.66rem; font-weight:700; text-transform:uppercase; letter-spacing:.08em;
+       padding:5px 11px; border-radius:100px; background:rgba(46,86,80,.10); color:var(--green)}
+  .card.alt .tag{background:rgba(224,122,95,.14); color:var(--rose)}
+  h2{font-family:'Fraunces',Georgia,serif; font-weight:500; font-size:1.22rem; color:var(--green); letter-spacing:-.01em}
+  .card p{font-size:.88rem; color:var(--body)}
+  .go{margin-top:auto; font-weight:600; font-size:.88rem; color:var(--green); display:inline-flex; align-items:center; gap:6px}
+  .card.alt .go{color:var(--rose)}
+  .foot{margin-top:38px; font-size:.82rem; color:var(--meta)}
+
+  /* layout glyphs */
+  .glyph{height:50px}
+  .glyph.cols{display:flex; gap:6px; align-items:flex-end}
+  .glyph.cols i{width:22%; height:100%; background:var(--green); opacity:.85; border-radius:4px}
+  .glyph.group{display:flex; flex-direction:column; gap:7px; justify-content:center; height:50px}
+  .glyph.group i{height:11px; background:var(--coral); opacity:.8; border-radius:4px}
+  .glyph.group i:first-child{width:62%}
+  .glyph.spot{display:flex; flex-direction:column; gap:7px; height:50px}
+  .glyph.spot b{height:22px; background:var(--green); opacity:.9; border-radius:5px}
+  .glyph.spot span{display:flex; gap:6px}
+  .glyph.spot span i{width:30%; height:16px; background:var(--green); opacity:.45; border-radius:4px}
+  .glyph.shelf{display:flex; flex-direction:column; gap:7px; justify-content:center; height:50px}
+  .glyph.shelf span{display:flex; gap:6px}
+  .glyph.shelf i{width:20px; height:17px; background:var(--coral); opacity:.7; border-radius:4px}
 </style>
 </head>
 <body>
   <main class="wrap">
     <p class="kicker">WeWomen · Free Library</p>
-    <h1>Two layouts to compare</h1>
+    <h1>Four layouts to compare</h1>
     <p class="lede">Same content, same behaviour: one email unlocks everything, and every resource has a quick preview. Only the structure differs. Open each and see which feels right.</p>
 
     <div class="grid">
-      <a class="card card--a" href="columns.html">
-        <span class="tag">Option A</span>
-        <div class="glyph"><i></i><i></i><i></i><i></i></div>
+      <a class="card" href="columns.html">
+        <span class="tag">A</span>
+        <div class="glyph cols"><i></i><i></i><i></i><i></i></div>
         <h2>Four columns</h2>
-        <p>Each topic is its own column with a photo, title and subtitle, resources stacked beneath. The four sit side by side, and stack into one on mobile.</p>
-        <span class="go">View this version →</span>
+        <p>Each topic is a column with a photo, title and subtitle, resources stacked beneath. Side by side on desktop, stacked on mobile.</p>
+        <span class="go">View →</span>
       </a>
 
-      <a class="card card--b" href="grouped.html">
-        <span class="tag">Option B</span>
-        <div class="glyph"><i></i><i></i><i></i></div>
+      <a class="card alt" href="grouped.html">
+        <span class="tag">B</span>
+        <div class="glyph group"><i></i><i></i><i></i></div>
         <h2>Grouped sections</h2>
-        <p>Topics run down the page as full-width sections with a sticky jump-nav at the top. Roomier rows, one topic in focus at a time as you scroll.</p>
-        <span class="go">View this version →</span>
+        <p>Topics run down the page as full-width sections with a sticky jump-nav. Roomier rows, one topic in focus as you scroll.</p>
+        <span class="go">View →</span>
+      </a>
+
+      <a class="card" href="spotlight.html">
+        <span class="tag">C</span>
+        <div class="glyph spot"><b></b><span><i></i><i></i><i></i></span></div>
+        <h2>Spotlight + tabs</h2>
+        <p>One featured 'start here' resource up top, then tabbed topics below. Compact, and it foregrounds a hero resource.</p>
+        <span class="go">View →</span>
+      </a>
+
+      <a class="card alt" href="shelf.html">
+        <span class="tag">D</span>
+        <div class="glyph shelf"><span><i></i><i></i><i></i><i></i></span><span><i></i><i></i><i></i><i></i></span></div>
+        <h2>Shelf rows</h2>
+        <p>One swipeable row of covers per topic, like a streaming app. Browsable and warm, and it scales as the library grows.</p>
+        <span class="go">View →</span>
       </a>
     </div>
 
-    <p class="foot">Both are concept mockups. The content is placeholder, to be swapped for the real resources.</p>
+    <p class="foot">All four are concept mockups. The content is placeholder, to be swapped for the real resources.</p>
   </main>
 </body>
 </html>
